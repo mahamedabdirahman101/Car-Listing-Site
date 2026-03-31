@@ -1,10 +1,17 @@
 import { useState } from "react";
-import {Link } from "react-router-dom";
+import {Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 const SignUp = () => {
+  const navigate = useNavigate();
 
   //function to handle form submission
 const [formData, setFormData] = useState({});
+
+const [error, setError] = useState(null);
+const [loading, setLoading] = useState(false);  
+
+
 
 // function to manage changes of the input elements
 const handleChange = (e) => {  
@@ -17,9 +24,20 @@ const handleChange = (e) => {
   console.log(formData);
 
   const handleSubmit = async (e) => {
-   
     e.preventDefault();
+
       try { 
+        setLoading(true);
+        setError(null);
+
+        // let's check form data
+        if (!(formData.username && formData.email && formData.password)) {
+          toast.error("Please fill in all fields");
+          setLoading(false);
+          return; // stop further execution if validation fails
+        }
+
+
         const res = await fetch("/api/auth/signup", {
           method: "POST",
           headers: {    "Content-Type": "application/json" },
@@ -27,11 +45,18 @@ const handleChange = (e) => {
         });
         const data = await res.json();
         if(data.success===false){
+          setError(data.message);
+          toast.error("Registration failed: " + data.message);
+          setLoading(false);
           return
         }
-        console.log(data);
+        navigate("/sign-in");
+        
       } catch (error) {
-        console.log(error);
+        setError(error.message);
+        toast.error("Registration Failed: " + error.message);
+        setLoading(false);
+        toast.error("Registration Failed Again: " + error.message);
       }
     
   }
@@ -51,6 +76,7 @@ const handleChange = (e) => {
           <span className="text-blue-700">Sign In</span>
         </Link>
       </div>
+      <ToastContainer />
     </div>
   )
 }
