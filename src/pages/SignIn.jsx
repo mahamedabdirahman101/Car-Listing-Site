@@ -1,15 +1,18 @@
 import { useState } from "react";
 import {Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { useAppContext } from "../context/AppContext";
 
 const SignIn = () => {
+  const { currentUser, error, loading, signInStart, signInSuccess, signInFailure } = useAppContext();
+
   const navigate = useNavigate();
 
   //function to handle form submission
 const [formData, setFormData] = useState({});
 
-const [error, setError] = useState(null);
-const [loading, setLoading] = useState(false);  
+// const [error, setError] = useState(null);
+// const [loading, setLoading] = useState(false);  
 
 
 
@@ -27,13 +30,13 @@ const handleChange = (e) => {
     e.preventDefault();
 
       try { 
-        setLoading(true);
-        setError(null);
+        signInStart();
 
         // let's check form data
         if (!(formData.email && formData.password)) {
           toast.error("Please fill in all fields");
-          setLoading(false);
+        
+          
           return; // stop further execution if validation fails
         }
 
@@ -45,21 +48,23 @@ const handleChange = (e) => {
         });
         const data = await res.json();
         if(data.success===false){
-          setError(data.message);
+          signInFailure(data.message); 
           toast.error("Login failed: " + data.message);
-          setLoading(false);
+          
           return
         }
+        signInSuccess(data.user);
         navigate("/");
         
       } catch (error) {
-        setError(error.message);
+        
         toast.error("Login Failed: " + error.message);
-        setLoading(false);
+        signInFailure(error.message);
         toast.error("Login Failed Again: " + error.message);
       }
     
   }
+  currentUser && console.log(currentUser);
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl text-center font-semibold my-7">Sign In</h1>
