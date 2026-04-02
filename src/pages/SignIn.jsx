@@ -2,6 +2,7 @@ import { useState } from "react";
 import {Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { useAppContext } from "../context/AppContext";
+import OAuth from "../components/OAuth";
 
 const SignIn = () => {
   const { currentUser, error, loading, signInStart, signInSuccess, signInFailure } = useAppContext();
@@ -74,12 +75,14 @@ const handleChange = (e) => {
     <input onChange={handleChange} className="border p-3 rounded-lg" type="email" placeholder="email" id="email" />
     <input onChange={handleChange} className="border p-3 rounded-lg" type="password" placeholder="password" id="password" />
     <button className="bg-slate-700 text-white p-3 rounded-lg hover:opacity-90 uppercase" >Login</button>
+      <OAuth />
       </form>
       <div className="flex gap-2 mt-5 justify-between">
         <p>Dont have an account?</p>
         <Link to="/sign-up">
           <span className="text-blue-700">Sign Up</span>
         </Link>
+        
       </div>
       <ToastContainer />
     </div>

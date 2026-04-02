@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import OAuth from "../components/OAuth";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -69,6 +70,7 @@ const handleChange = (e) => {
     <input onChange={handleChange} className="border p-3 rounded-lg" type="email" placeholder="email" id="email" />
     <input onChange={handleChange} className="border p-3 rounded-lg" type="password" placeholder="password" id="password" />
     <button className="bg-slate-700 text-white p-3 rounded-lg hover:opacity-90 uppercase" >Sign Up</button>
+    <OAuth />
       </form>
       <div className="flex gap-2 mt-5 justify-between">
         <p>Have an account?</p>
@@ -76,6 +78,7 @@ const handleChange = (e) => {
           <span className="text-blue-700">Sign In</span>
         </Link>
       </div>
+      
       <ToastContainer />
     </div>
   )
